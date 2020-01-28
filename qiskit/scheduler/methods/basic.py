@@ -142,29 +142,7 @@ def translate_gates_to_pulse_defs(circuit: QuantumCircuit,
 
     def get_measure_schedule() -> CircuitPulseDef:
         """Create a schedule to measure the qubits queued for measuring."""
-        # measures = set()
-        # all_qubits = set()
         sched = Schedule()
-        # for qubit in qubit_mem_slots:
-        #     measures.add(tuple(schedule_config.meas_map[qubit]))
-        # for qubits in measures:
-        #     all_qubits.update(qubits)
-        #     unused_mem_slots = set(qubits) - set(qubit_mem_slots.values())
-        #     default_sched = inst_map.get('measure', qubits)
-        #     for time, inst in default_sched.instructions:
-        #         if isinstance(inst, AcquireInstruction):
-        #             for channel in inst.acquires:
-        #                 if channel.index in qubit_mem_slots.keys():
-        #                     mem_slot = MemorySlot(qubit_mem_slots[channel.index])
-        #                 else:
-        #                     mem_slot = MemorySlot(unused_mem_slots.pop())
-        #                 sched._union((time, AcquireInstruction(command=inst.command,
-        #                                                        acquire=channel,
-        #                                                        mem_slot=mem_slot)))
-
-        #         # Measurement pulses should only be added if its qubit was measured by the user
-        #         elif inst.channels[0].index in qubit_mem_slots.keys():
-        #             sched._union((time, inst))
         sched += measure(qubits=list(qubit_mem_slots.keys()),
                          inst_map=inst_map,
                          meas_map=schedule_config.meas_map,
