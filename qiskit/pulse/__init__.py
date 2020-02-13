@@ -58,6 +58,12 @@ Commands
    ConstantPulse
    functional_pulse
 
+Pulse Library
+==============
+
+.. automodule:: qiskit.pulse.pulse_lib
+   :members:
+
 Schedules
 =========
 
