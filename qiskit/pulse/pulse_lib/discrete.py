@@ -446,11 +446,12 @@ def drag(duration: int, amp: complex, sigma: float, beta: float,
 
     If ``zero_ends == True``, the samples from :math:`g(x)` are remapped as in :meth:`gaussian`.
 
-        |citation|_
+    References:
+        1. |citation1|_
 
-        .. _citation: http://dx.doi.org/10.1103/PhysRevA.83.012308
+        .. _citation1: http://dx.doi.org/10.1103/PhysRevA.83.012308
 
-        .. |citation| replace:: *[1] Gambetta, J. M., Motzoi, F., Merkel, S. T. & Wilhelm, F. K.
+        .. |citation1| replace:: *Gambetta, J. M., Motzoi, F., Merkel, S. T. & Wilhelm, F. K.
             "Analytic control methods for high-fidelity unitary operations
             in a weakly nonlinear oscillator." Phys. Rev. A 83, 012308 (2011)*
 
