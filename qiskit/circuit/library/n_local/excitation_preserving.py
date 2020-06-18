@@ -23,7 +23,7 @@ from .two_local import TwoLocal
 
 
 class ExcitationPreserving(TwoLocal):
-    r"""The heurisitic excitation-preserving wave function ansatz.
+    r"""The heuristic excitation-preserving wave function ansatz.
 
     The ``ExcitationPreserving`` circuit preserves the ratio of :math:`|00\rangle`,
     :math:`|01\rangle + |10\rangle` and :math:`|11\rangle` states. The matrix representing
@@ -100,46 +100,30 @@ class ExcitationPreserving(TwoLocal):
 
         Examples:
 
-            .. jupyter-execute::
+        .. jupyter-execute::
 
-                from typing import Union, Optional, List, Tuple, Callable, Any
-                from numpy import pi
-                from qiskit.circuit import QuantumCircuit, Parameter
-                from qiskit.circuit.library.standard_gates import RZGate
-                from qiskit.circuit.library.n_local import TwoLocal
-                from qiskit.circuit.library.n_local import ExcitationPreserving
+            from qiskit.circuit.library import ExcitationPreserving
+            ansatz = ExcitationPreserving(3, reps=1, insert_barriers=True,
+                                          entanglement='linear')
+            ansatz.draw('mpl')  # show the circuit
 
-                ansatz = ExcitationPreserving(3, reps=1, insert_barriers=True,
-                entanglement='linear')
-                ansatz.draw('mpl')  # show the circuit
+        .. jupyter-execute::
 
-            .. jupyter-execute::
+            from qiskit.circuit import QuantumCircuit
+            from qiskit.circuit.library import ExcitationPreserving
+            ansatz = ExcitationPreserving(2, reps=1)
+            qc = QuantumCircuit(2)  # create a circuit and append the RY variational form
+            qc.cry(0.2, 0, 1)  # do some previous operation
+            qc.compose(ansatz, inplace=True)  # add the swaprz
+            qc.draw('mpl')
 
-                from typing import Union, Optional, List, Tuple, Callable, Any
-                from numpy import pi
-                from qiskit.circuit import QuantumCircuit, Parameter
-                from qiskit.circuit.library.standard_gates import RZGate
-                from qiskit.circuit.library.n_local import TwoLocal
-                from qiskit.circuit.library.n_local import ExcitationPreserving
+        .. jupyter-execute::
 
-                ansatz = ExcitationPreserving(2, reps=1)
-                qc = QuantumCircuit(2)  # create a circuit and append the RY variational form
-                qc.cry(0.2, 0, 1)  # do some previous operation
-                qc.compose(ansatz, inplace=True)  # add the swaprz
-                qc.draw('mpl')
-
-            .. jupyter-execute::
-
-                from typing import Union, Optional, List, Tuple, Callable, Any
-                from numpy import pi
-                from qiskit.circuit import QuantumCircuit, Parameter
-                from qiskit.circuit.library.standard_gates import RZGate
-                from qiskit.circuit.library.n_local import TwoLocal
-                from qiskit.circuit.library.n_local import ExcitationPreserving
-
-                ansatz = ExcitationPreserving(3,reps=1,mode='fsim',
-                entanglement=[[0,2]],insert_barriers=True)
-                ansatz.draw('mpl')
+            from qiskit.circuit.library import ExcitationPreserving
+            ansatz = ExcitationPreserving(3,reps=1,mode='fsim',
+                                          entanglement=[[0,2]],
+                                          insert_barriers=True)
+            ansatz.draw('mpl')
         """
         supported_modes = ['iswap', 'fsim']
         if mode not in supported_modes:

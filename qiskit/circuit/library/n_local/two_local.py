@@ -149,11 +149,14 @@ class TwoLocal(NLocal):
 
      .. jupyter-execute::
 
+         from qiskit.circuit.library import TwoLocal
          two = TwoLocal(3, 'ry', 'cx', 'linear', reps=2, insert_barriers=True)
          two.draw('mpl')  # decompose the layers into standard gates
 
      .. jupyter-execute::
 
+         from qiskit import QuantumCircuit
+         from qiskit.circuit.library import TwoLocal
          two = TwoLocal(3, ['ry','rz'], 'cz', 'full', reps=1, insert_barriers=True)
          qc = QuantumCircuit(3)
          qc += two
