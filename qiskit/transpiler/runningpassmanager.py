@@ -92,7 +92,7 @@ class RunningPassManager:
                 raise TranspilerError('The flow controller parameter %s is not callable' % name)
         return flow_controller
 
-    def run(self, circuit, output_name=None, callback=None):
+    def run(self, circuit, output_name=None, circuit_calibrations=None, callback=None):
         """Run all the passes on a QuantumCircuit
 
         Args:
@@ -105,6 +105,7 @@ class RunningPassManager:
         """
         name = circuit.name
         dag = circuit_to_dag(circuit)
+        circuit_calibrations = circuit.calibrations
         del circuit
 
         if callback:
@@ -112,7 +113,7 @@ class RunningPassManager:
 
         for passset in self.working_list:
             for pass_ in passset:
-                dag = self._do_pass(pass_, dag, passset.options)
+                dag = self._do_pass(pass_, dag, passset.options, circuit_calibrations)
 
         circuit = dag_to_circuit(dag)
         if output_name:
@@ -122,39 +123,43 @@ class RunningPassManager:
         circuit._layout = self.property_set['layout']
         return circuit
 
-    def _do_pass(self, pass_, dag, options):
+    def _do_pass(self, pass_, dag, options, circuit_calibrations):
         """Do a pass and its "requires".
 
         Args:
             pass_ (BasePass): Pass to do.
             dag (DAGCircuit): The dag on which the pass is ran.
             options (dict): PassManager options.
+            circuit_calibrations: circuit_calibrations
         Returns:
             DAGCircuit: The transformed dag in case of a transformation pass.
             The same input dag in case of an analysis pass.
         Raises:
             TranspilerError: If the pass is not a proper pass instance.
         """
-
         # First, do the requires of pass_
         for required_pass in pass_.requires:
             dag = self._do_pass(required_pass, dag, options)
 
         # Run the pass itself, if not already run
         if pass_ not in self.valid_passes:
-            dag = self._run_this_pass(pass_, dag)
+            dag = self._run_this_pass(pass_, dag, circuit_calibrations)
 
             # update the valid_passes property
             self._update_valid_passes(pass_)
 
         return dag
 
-    def _run_this_pass(self, pass_, dag):
+    def _run_this_pass(self, pass_, dag, circuit_calibrations):
         pass_.property_set = self.property_set
         if pass_.is_transformation_pass:
             # Measure time if we have a callback or logging set
+            from qiskit.transpiler.passes.basis.unroll_custom_definitions import UnrollCustomDefinitions
             start_time = time()
-            new_dag = pass_.run(dag)
+            if isinstance(pass_, UnrollCustomDefinitions):
+                new_dag = pass_.run(dag, circuit_calibrations)
+            else:
+                new_dag = pass_.run(dag)
             end_time = time()
             run_time = end_time - start_time
             # Execute the callback function if one is set

@@ -182,11 +182,6 @@ def transpile(circuits: Union[QuantumCircuit, List[QuantumCircuit]],
         _log_transpile_time(start_time, end_time)
         return circuits
 
-    for circuit in circuits:
-        if len(circuit.calibrations) != 0:
-            # TODO: do something here
-            pass
-
     if pass_manager is not None:
         _check_conflicting_argument(optimization_level=optimization_level, basis_gates=basis_gates,
                                     coupling_map=coupling_map, seed_transpiler=seed_transpiler,
@@ -205,6 +200,22 @@ def transpile(circuits: Union[QuantumCircuit, List[QuantumCircuit]],
         # Take optimization level from the configuration or 1 as default.
         config = user_config.get_config()
         optimization_level = config.get('transpile_optimization_level', 1)
+
+    for circuit in circuits:
+        if len(circuit.calibrations) != 0:
+            # TODO: do something here
+            # check if custom gate; add to basis gates (?)
+            # because it currently raises QiskitError
+            # QiskitError: "Cannot unroll the circuit to the given basis,
+            # ['u1', 'u2', 'u3', 'cx', 'id']. Instruction rxtheta not
+            # found in equivalence library and no rule found to expand."
+
+            # check if the gate has been calibrated on the qubit
+            # Custom gate G appears on qubit Q0: G appears on qubit Q0
+            # in transpiled circuit.
+
+            # check if G is on any other qubit
+            # Raise the Qiskit Error
 
     # Get transpile_args to configure the circuit transpilation job(s)
     transpile_args = _parse_transpile_args(circuits, backend, basis_gates, coupling_map,

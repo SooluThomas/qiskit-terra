@@ -37,7 +37,7 @@ class UnrollCustomDefinitions(TransformationPass):
         self._equiv_lib = equivalence_library
         self._basis_gates = basis_gates
 
-    def run(self, dag):
+    def run(self, dag, circuit_calibrations=None):
         """Run the UnrollCustomDefinitions pass on `dag`.
 
         Args:
@@ -57,6 +57,7 @@ class UnrollCustomDefinitions(TransformationPass):
         basic_insts = set(('measure', 'reset', 'barrier', 'snapshot'))
         device_insts = basic_insts | set(self._basis_gates)
 
+
         for node in dag.op_nodes():
 
             if node.name in device_insts or self._equiv_lib.has_entry(node.op):
@@ -64,6 +65,17 @@ class UnrollCustomDefinitions(TransformationPass):
                     pass
                 else:
                     continue
+
+            # if this node (not just name, check qubits and params) appear in calibations then continue
+            if circuit_calibrations:
+                qubit = tuple([node.qargs[0].index])
+                params = tuple(node.op.params)
+                if (node.name in circuit_calibrations and
+                    (qubit, params) in circuit_calibrations[node.name].keys()):
+                    import ipdb; ipdb.set_trace()
+                    continue
+                else:
+                    pass
 
             try:
                 rule = node.op.definition.data
