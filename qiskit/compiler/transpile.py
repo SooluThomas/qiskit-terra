@@ -216,6 +216,7 @@ def transpile(circuits: Union[QuantumCircuit, List[QuantumCircuit]],
 
             # check if G is on any other qubit
             # Raise the Qiskit Error
+            pass
 
     # Get transpile_args to configure the circuit transpilation job(s)
     transpile_args = _parse_transpile_args(circuits, backend, basis_gates, coupling_map,

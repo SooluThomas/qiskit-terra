@@ -60,6 +60,9 @@ class Unroller(TransformationPass):
                 #  instructions should be part of the device-reported basis. Currently, no
                 #  backend reports "measure", for example.
                 continue
+
+            # if this node (not just name, check qubits and params) appear in calibations then continue
+
             if node.name in self.basis:  # If already a base, ignore.
                 if isinstance(node.op, ControlledGate) and node.op._open_ctrl:
                     pass

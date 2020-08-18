@@ -71,8 +71,7 @@ class UnrollCustomDefinitions(TransformationPass):
                 qubit = tuple([node.qargs[0].index])
                 params = tuple(node.op.params)
                 if (node.name in circuit_calibrations and
-                    (qubit, params) in circuit_calibrations[node.name].keys()):
-                    import ipdb; ipdb.set_trace()
+                   (qubit, params) in circuit_calibrations[node.name].keys()):
                     continue
                 else:
                     pass
