@@ -1328,10 +1328,10 @@ class TestPulseAssembler(QiskitTestCase):
 
     def test_assemble_meas_map_vs_insts(self):
         schedule = Schedule()
-        schedule += Acquire(5, AcquireChannel(0), MemorySlot(1))
+        schedule += Acquire(5, AcquireChannel(0), MemorySlot(0))
         schedule += Acquire(5, AcquireChannel(1), MemorySlot(1))
-        schedule += Acquire(5, AcquireChannel(2), MemorySlot(1)) << 2
-        schedule += Acquire(5, AcquireChannel(3), MemorySlot(1)) << 2
+        schedule += Acquire(5, AcquireChannel(2), MemorySlot(2)) << 2
+        schedule += Acquire(5, AcquireChannel(3), MemorySlot(3)) << 2
 
         with self.assertRaises(QiskitError):
             assemble(schedule,
